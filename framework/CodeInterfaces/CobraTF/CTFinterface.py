@@ -34,10 +34,11 @@ class CTF(CodeInterfaceBase):
       @ In, workingDir, string, current working dir
       @ Out, output, string, optional, present in case the root of the output file gets changed in this method.
     """
-    outfile  = os.path.join(workingDir,output+'.out')
-    outputobj= ctfdata(outfile)
+    print(self.outVars)
+    outfile    = os.path.join(workingDir,output+'.out')
+    outputobj  = ctfdata(outfile, self.outVars)
     outputobj.writeCSV(os.path.join(workingDir,output+'.csv'))
-
+  
   def findInps(self,inputFiles):
     """
       Locates the input files required by CTF (Cobra-TF) Interface
@@ -107,8 +108,18 @@ class CTF(CodeInterfaceBase):
     parser = GenericParser.GenericParser(currentInputsToPerturb)
     parser.modifyInternalDictionary(**Kwargs)
     parser.writeNewInput(currentInputsToPerturb,originalInputs)
-    return currentInputFiles
-
+    return currentInputFiles    
+  
+  def _readMoreXML(self,xmlNode):
+    """
+      Initializes data object based on XML input.
+      @ In, xmlNode, xml.etree.ElementTree.Element or InputData.ParameterInput, input specification
+      @ Out, None
+    """
+    print("Ayak - New Changes")
+    self.outVars = xmlNode.children[1].text
+    print(self.outVars)
+    
   def generateCommand(self,inputFiles,executable,clargs=None,fargs=None, preExec=None):
     """
       This method is used to retrieve the command (in tuple format) needed to launch the Code.

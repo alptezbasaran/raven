@@ -16,20 +16,21 @@ Modified by Alp Tezbasaran @ INL
 July 2018
 """
 
-
 import numpy as np
 
 class ctfdata:
   """
     Class that parses CTF output file and reads in (output files type: .ctf.out) and write a csv file
   """
-  def __init__(self,filen):
+  def __init__(self,filen,outVars):
     """
       Constructor
       @ In, filen, string, file name to be parsed
       @ Out, None
     """
-
+    print('AYAK = ', outVars)
+    self.outVars = outVars.split(",")
+    print(self.outVars)
     # convert output file name (deck.ctf.out to deck.out)
     if ('deck.ctf.out' in filen):
       filen = filen.replace('deck.ctf.out', 'deck.out')
@@ -736,4 +737,9 @@ class ctfdata:
               outType6 = False
               externalFlow = False
 
+    # Only save the requested output
+    print("Ayak - New Changes")
+    dictArray = np.vstack((dictArray[:,0],[dictArray[:,header.index(variable)] for variable in self.outVars])).T
+    header = [header[0]] + [header[header.index(variable)] for variable in self.outVars]
+    
     return dictArray, header
